@@ -22,4 +22,8 @@ public class ContactService {
         return contact;
     }
 
+    public Contact recordContact(Contact contact) {
+        return contactRepository.recordContact(contact);
+    }
+
 }
