@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("contact")
 public class ContactApiController {
 
-    private ContactService contactService;
+    private final ContactService contactService;
 
     @Autowired
     public ContactApiController(ContactService contactService) {

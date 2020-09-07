@@ -1,5 +1,7 @@
 package com.weber.cms.contact.model;
 
+import java.util.Date;
+
 public class Contact {
 
     private String id;
@@ -7,6 +9,8 @@ public class Contact {
     private String firstName;
 
     private String lastName;
+
+    private Date birthDate;
 
     public String getFirstName() {
         return firstName;
@@ -30,5 +34,13 @@ public class Contact {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 }

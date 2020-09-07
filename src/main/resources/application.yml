@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: My CMS
+
+server:
+  port: 8080
+
+myAppConfig:
+  service1:
+    url: https://google.com/some-service

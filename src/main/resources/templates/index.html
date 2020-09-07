@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head></head>
+    <body>
+        <form method="post" th:action="@{/}" th:object="${backingObject}">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" th:field="*{firstName}">
+            <label for="firstName">Last Name:</label>
+            <input type="text" id="lastName" name="lasttName" th:field="*{lastName}">
+            <label for="birthDate">Birth Date:</label>
+            <input type="text" id="birthDate" name="birthDate" th:field="*{birthDate}">
+            <input type="submit">
+        </form>
+        <p th:text="${#dates.format(backingObject.birthDate, 'dd-MM-yyyy HH:mm')}"></p>
+    </body>
+</html>
