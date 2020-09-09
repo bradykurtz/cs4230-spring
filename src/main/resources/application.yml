@@ -1,6 +1,12 @@
 spring:
   application:
     name: My CMS
+  datasource:
+    url: jdbc:mysql://localhost:3307/cs4230
+    username: cs4230-user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    platform: mysql
 
 server:
   port: 8080

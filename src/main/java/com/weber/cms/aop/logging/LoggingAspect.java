@@ -33,17 +33,19 @@ public class LoggingAspect {
     }
 
     @Around("@annotation(com.weber.cms.aop.logging.Log)")
-    public void logAround(ProceedingJoinPoint joinPoint) {
+    public Object logAround(ProceedingJoinPoint joinPoint) {
         // Anything you want to do before the method
         Signature signature = joinPoint.getSignature();
 
         logger.info("Entered " + signature.getName());
+        Object value = null;
         try {
-            joinPoint.proceed(); // This will call the method that was intended
+            value = joinPoint.proceed(); // This will call the method that was intended
         } catch (Throwable throwable) {
             logger.info("Exception Thrown In " + signature.getName(), throwable);
         }
         logger.info("Leaving " + signature.getName());
+        return value;
         //Anything you want to do after the method
     }
 
