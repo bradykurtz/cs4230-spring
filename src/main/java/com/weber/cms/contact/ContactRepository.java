@@ -39,6 +39,7 @@ public class ContactRepository {
         String sql = "SELECT * FROM CONTACT WHERE id = ?";
         List<Object> values = new ArrayList<>();
         values.add(id);
+
         return jdbcTemplate.queryForObject(sql, values.toArray(), (RowMapper<Contact>) (rs, rowNum) -> {
             Contact contact = new Contact();
             contact.setFirstName(rs.getString("FIRST_NAME"));
