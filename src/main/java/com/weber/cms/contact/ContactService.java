@@ -1,5 +1,6 @@
 package com.weber.cms.contact;
 
+import com.weber.cms.aop.logging.Log;
 import com.weber.cms.contact.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class ContactService {
         this.contactRepository = contactRepository;
     }
 
+    @Log
     public Contact getContactById(String id) {
         Contact contact = contactRepository.getContactById(id);
         if(contact == null) {
