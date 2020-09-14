@@ -2,11 +2,16 @@ spring:
   application:
     name: My CMS
   datasource:
-    url: jdbc:mysql://localhost:3307/cs4230
-    username: cs4230-user
+    url: jdbc:mysql://localhost:3307/cms
+    username: cms-user
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
     platform: mysql
+    flyway:
+      baseline-on-migrate: true
+      schemas: cs4230
+      user: ${spring.datasource.username}
+      url: ${spring.datasource.url}
 
 server:
   port: 8080

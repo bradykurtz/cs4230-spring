@@ -1,0 +1,44 @@
+CREATE TABLE USER (
+    id BINARY(16) PRIMARY KEY NOT NULL,
+    first_name VARCHAR(256) NOT NULL,
+    last_name VARCHAR(256) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    password BINARY(64) NOT NULL,
+    email VARCHAR(254) NOT NULL,
+    locked BOOLEAN NOT NULL DEFAULT 0,
+    enabled BOOLEAN NOT NULL DEFAULT 1,
+    creds_expire_on TIMESTAMP,
+    expired_on TIMESTAMP,
+    created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified_on TIMESTAMP NOT NULL DEFAULT NOW()
+) ENGINE=INNODB;
+
+CREATE TABLE PERMISSION(
+    id BINARY(16) PRIMARY KEY NOT NULL,
+    name varchar(64) NOT NULL,
+    created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified_on TIMESTAMP NOT NULL DEFAULT NOW()
+) ENGINE=INNODB;
+
+CREATE TABLE ROLE(
+    id BINARY(16) PRIMARY KEY NOT NULL,
+    name varchar(64) NOT NULL,
+    created_on TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified_on TIMESTAMP NOT NULL DEFAULT NOW()
+) ENGINE=INNODB;
+
+CREATE TABLE ROLE_PERMISSION(
+    role_id BINARY(16),
+    permission_id BINARY(16),
+    PRIMARY KEY (role_id, permission_id),
+    FOREIGN KEY (permission_id) REFERENCES PERMISSION(id),
+    FOREIGN KEY (role_id) REFERENCES ROLE(id)
+) ENGINE=INNODB;
+
+CREATE TABLE USER_ROLE(
+    role_id BINARY(16),
+    user_id BINARY(16),
+    PRIMARY KEY (role_id, user_id),
+    FOREIGN KEY (role_id) REFERENCES ROLE(id),
+    FOREIGN KEY (user_id) REFERENCES USER(id)
+) ENGINE=INNODB;
