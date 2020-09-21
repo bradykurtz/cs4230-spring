@@ -13,9 +13,11 @@ spring:
       user: ${spring.datasource.username}
       url: ${spring.datasource.url}
 
+security:
+  jwt:
+    token:
+      secret-key:  AScaklasdAS*(@#$!
+      ttl: 30m
+
 server:
   port: 8080
-
-myAppConfig:
-  service1:
-    url: https://google.com/some-service

@@ -2,6 +2,7 @@ package com.weber.cms.user.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -82,31 +83,40 @@ public class UserRowCallbackHandler implements RowCallbackHandler {
         UUID permissionId = getUUIDFromResultSet(rs, "perm_id");
         Role currentRole = user.getRoles().get(roleId);
 
-        if (currentRole == null) {
+        if (currentRole == null && roleId != null) {
             currentRole = new Role();
             currentRole.setId(roleId);
             currentRole.setName(rs.getString("role_name"));
             user.getRoles().put(roleId, currentRole);
         }
 
-        Permission currentPermission = currentRole.getPermissionById(permissionId);
+        if(currentRole != null) {
+            Permission currentPermission = currentRole.getPermissionById(permissionId);
 
-        if (currentPermission == null) {
-            currentPermission = new Permission();
-            currentPermission.setId(permissionId);
-            currentPermission.setName(rs.getString("perm_name"));
-            currentRole.getPermissions().put(permissionId, currentPermission);
+            if (currentPermission == null) {
+                currentPermission = new Permission();
+                currentPermission.setId(permissionId);
+                currentPermission.setName(rs.getString("perm_name"));
+                currentRole.getPermissions().put(permissionId, currentPermission);
+            }
         }
-
 
     }
 
     private UUID getUUIDFromResultSet(ResultSet rs, String key) throws SQLException {
-        return UUID.nameUUIDFromBytes(rs.getBytes(key));
+        String uuid = rs.getString(key);
+        if (uuid != null) {
+            return UUID.fromString(uuid);
+        }
+        return null;
     }
 
     private ZonedDateTime createZonedDateTime(ResultSet rs, String key) throws SQLException {
-        return ZonedDateTime.ofInstant(rs.getTimestamp(key).toInstant(), ZoneId.of("UTC"));
+        Timestamp value = rs.getTimestamp(key);
+        if (value != null) {
+            return ZonedDateTime.ofInstant(rs.getTimestamp(key).toInstant(), ZoneId.of("UTC"));
+        }
+        return null;
     }
 
     public User getUser() {

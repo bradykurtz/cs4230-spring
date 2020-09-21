@@ -3,7 +3,7 @@ CREATE TABLE USER (
     first_name VARCHAR(256) NOT NULL,
     last_name VARCHAR(256) NOT NULL,
     username VARCHAR(50) NOT NULL,
-    password BINARY(64) NOT NULL,
+    password VARCHAR(128) NOT NULL,
     email VARCHAR(254) NOT NULL,
     locked BOOLEAN NOT NULL DEFAULT 0,
     enabled BOOLEAN NOT NULL DEFAULT 1,

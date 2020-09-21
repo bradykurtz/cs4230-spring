@@ -7,32 +7,59 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.weber.cms.spring.validation.ValidationGroup;
+import com.weber.cms.spring.validation.equalfields.EqualFields;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@EqualFields(
+    fields = {"password", "confirmPassword"},
+    message = "Password and ConfirmPassword must match",
+    groups = ValidationGroup.Register.class
+)
 public class User implements UserDetails {
 
+    @Null(groups = ValidationGroup.Register.class)
     private UUID id;
 
+    @NotBlank
     private String firstName;
 
+    @NotBlank
     private String lastName;
 
+    @JsonIgnore
+    @NotBlank(groups = ValidationGroup.Register.class)
     private String password;
 
+    @NotBlank(groups = ValidationGroup.Register.class)
+    private String confirmPassword;
+
+    @NotBlank
     private String email;
 
+    @NotBlank
     private String username;
 
-    private boolean locked;
+    @JsonIgnore
+    private boolean locked = false;
 
-    private boolean enabled;
+    @JsonIgnore
+    private boolean enabled = true;
 
+    @JsonIgnore
     private ZonedDateTime credentialsExpireOn;
 
+    @JsonIgnore
     private ZonedDateTime expiredOn;
 
     private ZonedDateTime createdOn;
@@ -43,14 +70,19 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getPermissions().stream()
+            .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+            .collect(Collectors.toSet());
+    }
+
+    public Set<Permission> getPermissions() {
         return Optional.ofNullable(this.roles)
             .orElseGet(HashMap::new)
             .values()
             .stream()
             .filter(role ->  role.getPermissions() != null && role.getPermissions().size() > 0)
             .flatMap(role -> role.getPermissions().values().stream())
-            .filter(Objects::nonNull)
-            .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+            .filter(p -> p != null && p.getName() != null && p.getId() != null)
             .collect(Collectors.toSet());
     }
 
@@ -71,7 +103,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return locked;
+        return !locked;
     }
 
     @Override
@@ -140,6 +172,14 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
     public ZonedDateTime getCredentialsExpireOn() {
         return credentialsExpireOn;
     }
@@ -157,6 +197,9 @@ public class User implements UserDetails {
     }
 
     public ZonedDateTime getCreatedOn() {
+        if (createdOn == null) {
+            createdOn = ZonedDateTime.now();
+        }
         return createdOn;
     }
 
@@ -165,6 +208,9 @@ public class User implements UserDetails {
     }
 
     public ZonedDateTime getModifiedOn() {
+        if (modifiedOn == null) {
+            modifiedOn = ZonedDateTime.now();
+        }
         return modifiedOn;
     }
 
